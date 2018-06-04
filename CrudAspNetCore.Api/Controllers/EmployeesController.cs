@@ -46,9 +46,9 @@ namespace CrudAspNetCore.Api.Controllers
                 return BadRequest(ModelState);
             }
             _db.Employees.Add(dto);
-            var result = await _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
 
-            return CreatedAtRoute("GetEmployee", new { id = dto.Id }, result);
+            return CreatedAtRoute("GetEmployee", new { id = dto.Id }, dto);
         }
 
 
