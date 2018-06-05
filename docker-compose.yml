@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  WebApi:
+    image: crud-aspnetcore-webapi
+    build:
+      context: ./CrudAspNetCore.Api
+      dockerfile: Dockerfile
+      args:
+          source: /bin/Debug/netcoreapp2.1/publish 
+    depends_on: 
+        - sqlserver
+          
+  sqlserver:
+    image: microsoft/mssql-server-linux
+    container_name: sqlserver
+    ports: 
+        - "1433:1433"
+    environment: 
+        SA_PASSWORD: P@ssw0rd
+        ACCEPT_EULA: Y
+        #attach_dbs: "[{'dbName':'trunk','dbFiles':['c:\\\\Databases\\\\trunk.mdf','c:\\\\Databases\\\\trunk_Log.ldf']}]"
+    healthcheck:
+      test: "exit 0"
