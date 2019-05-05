@@ -1,7 +1,7 @@
-FROM microsoft/dotnet:2.1-aspnetcore-runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.0.0-preview4
 ARG source
 ENV ASPNETCORE_ENVIRONMENT=DevTest
 WORKDIR /app
 EXPOSE 80
-COPY ${source:-bin/Debug/netcoreapp2.1/Docker/publish} .
+COPY ${source:-bin/Debug/netcoreapp3.0/publish} .
 ENTRYPOINT ["dotnet", "CrudAspNetCore.Api.dll"]
