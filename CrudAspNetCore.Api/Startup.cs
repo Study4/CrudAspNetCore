@@ -26,6 +26,8 @@ namespace CrudAspNetCore.Api
 
         public IConfiguration Configuration { get; }
 
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -40,6 +42,15 @@ namespace CrudAspNetCore.Api
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins("*");
+                });
+            });
 
             services.AddRazorPages();
 
@@ -78,6 +89,8 @@ namespace CrudAspNetCore.Api
             app.UseRouting();
 
             //app.UseAuthorization();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseEndpoints(endpoints =>
             {
