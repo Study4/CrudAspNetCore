@@ -17,9 +17,9 @@ spec:
     spec:
       containers:
       - name: web
-        image: "study4.azurecr.io/crud-aspnetcore-webapi:latest"
+        image: "study4.azurecr.io/crud-aspnetcore:latest"
         ports:
         - name: app
           containerPort: 80
-      imagePullSecrets:
-        - name: study4containerreg
+      #imagePullSecrets:
+      #  - name: study4containerreg
