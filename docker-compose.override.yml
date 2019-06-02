@@ -1,8 +1,0 @@
-version: '3'
-
-services:
-  WebApi:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=DevTest
-    ports:
-      - "80:80"
