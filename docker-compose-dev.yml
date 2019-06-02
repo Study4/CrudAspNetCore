@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  web-api:
+    image: skychang/crud-aspnetcore:3.0.0-preview5
+    container_name: web-api
+    build:
+      context: ./CrudAspNetCore.Api
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=DevTest
+    ports:
+      - "5000:80"
+      - "5001:443"
+
+  front-end:
+    image: study4.azurecr.io/crud-blazor-front-serverside:latest
+    container_name: front-end
+    environment:
+      - ASPNETCORE_ENVIRONMENT=DevTest
+    ports:
+      - "4000:80"
+      - "4001:443"
+          
+  sqlserver:
+    image: microsoft/mssql-server-linux
+    container_name: sqlserver
+    ports: 
+        - "1433:1433"
+    environment: 
+        SA_PASSWORD: P@ssw0rd
+        ACCEPT_EULA: Y
+        #attach_dbs: "[{'dbName':'trunk','dbFiles':['c:\\\\Databases\\\\trunk.mdf','c:\\\\Databases\\\\trunk_Log.ldf']}]"
+    healthcheck:
+      test: "exit 0"
