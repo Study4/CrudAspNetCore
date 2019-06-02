@@ -1,18 +1,18 @@
 # CrudAspNetCore
-CRUD - ASP.NET Core 
+CRUD - ASP.NET Core - 3.0 Preview 5
 
 ## 目標
 
-1. ASP.NET Core Web API CRUD Sample
-    a. Docker Support ( Dockerfile )
-3. DockerFile support dotnet build and build docker image
-3. Dcoker-Compose Support
-    a. Docker-Compose support Blazor Client ( need download blazor client docker image , is auto )
-    b. Dcoker-Compose support SQL Server Linux Container
+- ASP.NET Core Web API CRUD Sample
+    - Docker Support ( Dockerfile )
+- DockerFile support dotnet build and build docker image
+- Dcoker-Compose Support
+    - Docker-Compose support Blazor Client ( need download blazor client docker image , is auto )
+    - Dcoker-Compose support SQL Server Linux Container
 
 ## Issue
 
-1. Remove ASP.NET Core 2.1 HTTPS - SSL
+- Docker not use SSL
 
 ## How use
 ### dotnet
