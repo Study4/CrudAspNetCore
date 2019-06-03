@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: emp-api
+  name: sqlserver
 spec:
-  replicas: 4
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -13,16 +13,18 @@ spec:
   template:
     metadata:
       labels:
-        app: emp-api
+        app: db
     spec:
       containers:
-      - name: emp-api
-        image: "study4.azurecr.io/crud-aspnetcore:latest"
+      - name: db
+        image: "microsoft/mssql-server-linux"
         ports:
-        - name: emp-api-port
-          containerPort: 80
+        - name: sqlserver
+          containerPort: 1433
         env:
-        - name: "ASPNETCORE_ENVIRONMENT"
-          value: "Production"
+        - name: SA_PASSWORD
+          value: "P@ssw0rd"
+        - name: ACCEPT_EULA
+          value: "Y"
       #imagePullSecrets:
       #  - name: study4containerreg

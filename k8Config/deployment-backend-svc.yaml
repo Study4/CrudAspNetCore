@@ -1,12 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: emp-api-service-public
+  name: emp-api-service
 spec:
   ports:
-  - name: emp-api-public-port
+  - name: emp-api-private-port
     port: 80
     targetPort: emp-api-port
-  type: LoadBalancer
   selector:
     app: emp-api
