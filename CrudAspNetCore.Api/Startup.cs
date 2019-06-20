@@ -40,8 +40,7 @@ namespace CrudAspNetCore.Api
             services.AddDbContextPool<SkyHRContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddControllersWithViews()
-                .AddNewtonsoftJson();
+            services.AddControllersWithViews();
 
             services.AddCors(options =>
             {
