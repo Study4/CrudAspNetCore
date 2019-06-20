@@ -14,7 +14,7 @@ namespace CrudAspNetCore.Api.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "Hello", "Yvonne" };
+            return new string[] { "Hello", "World" };
         }
 
         // GET api/values/5
