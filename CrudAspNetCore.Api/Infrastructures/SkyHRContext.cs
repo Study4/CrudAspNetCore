@@ -1,4 +1,6 @@
 ﻿using CrudAspNetCore.Api.Models;
+using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,11 @@ namespace CrudAspNetCore.Api.Infrastructures
         public SkyHRContext(DbContextOptions<SkyHRContext> options)
           : base(options)
         {
+            //if (host.IsDevelopment()) return;
+
+            var conn = (SqlConnection)Database.GetDbConnection();
+            conn.AccessToken = (new AzureServiceTokenProvider())
+                .GetAccessTokenAsync("https://database.windows.net/").Result;
             Database.EnsureCreated();
         }
 
