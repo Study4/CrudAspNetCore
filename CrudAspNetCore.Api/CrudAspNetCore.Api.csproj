@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UserSecretsId>46966d9f-abd8-42e2-ba1e-74e5112afa7a</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/ab56d250-ff23-411f-b78e-34757333ca40/resourcegroups/AppServiceSecurity/providers/microsoft.insights/components/AppServiceSecurity-API</ApplicationInsightsResourceId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,9 +11,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.8.1" />
     <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.3.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="3.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc2" />
   </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1devtest_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

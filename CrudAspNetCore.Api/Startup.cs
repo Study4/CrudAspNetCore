@@ -37,7 +37,10 @@ namespace CrudAspNetCore.Api
             //    options.CheckConsentNeeded = context => true;
             //});
 
-            services.AddDbContextPool<SkyHRContext>(options =>
+
+            // 注意 , 除了不同環境有不同的 appsetting 外，目前還有可能使用到 Secret Management
+            // 目前使用 AddDbContextPool 會發生 login 失敗 ( 搭配 Azure MSI 會發生錯誤 )
+            services.AddDbContext<SkyHRContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllersWithViews();
@@ -59,6 +62,7 @@ namespace CrudAspNetCore.Api
                     Title = "Employee API",
                     Version = "v1", });
             });
+            services.AddApplicationInsightsTelemetry();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
