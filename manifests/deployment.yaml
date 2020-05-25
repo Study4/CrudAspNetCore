@@ -1,9 +1,13 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: emp-api
 spec:
   replicas: 4
+  selector:
+    matchLabels:
+      app: emp-api
+      version: "1.0"
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -14,10 +18,11 @@ spec:
     metadata:
       labels:
         app: emp-api
+        version: "1.0"
     spec:
       containers:
       - name: emp-api
-        image: "study4.azurecr.io/crud-aspnetcore:latest"
+        image: "study4.azurecr.io/crud-aspnetcore-api:latest"
         ports:
         - name: emp-api-port
           containerPort: 80

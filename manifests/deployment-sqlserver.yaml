@@ -1,9 +1,13 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sqlserver
+  name: hr-mssql
+  namespace: hr-system
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: hr-mssql
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -13,11 +17,11 @@ spec:
   template:
     metadata:
       labels:
-        app: db
+        app: hr-mssql
     spec:
       containers:
-      - name: db
-        image: "microsoft/mssql-server-linux"
+      - name: hr-mssql
+        image: "mcr.microsoft.com/mssql/server:2017-latest"
         ports:
         - name: sqlserver
           containerPort: 1433
@@ -26,5 +30,18 @@ spec:
           value: "P@ssw0rd"
         - name: ACCEPT_EULA
           value: "Y"
-      #imagePullSecrets:
-      #  - name: study4containerreg
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: hr-mssql
+  namespace: hr-system
+  labels: 
+    app: hr-mssql
+spec:
+  ports:
+  - name: tcp
+    port: 1433
+  selector:
+    app: hr-mssql

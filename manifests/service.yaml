@@ -1,0 +1,27 @@
+# for Load Balancer 
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: emp-api-service-public
+# spec:
+#   ports:
+#   - name: emp-api-public-port
+#     port: 80
+#     targetPort: emp-api-port
+#   type: LoadBalancer
+#   selector:
+#     app: emp-api
+
+# For Intrenal
+apiVersion: v1
+kind: Service
+metadata:
+  name: emp-api
+  labels: 
+    app: emp-api
+spec:
+  ports:
+  - port: 80
+    name: http
+  selector:
+    app: emp-api

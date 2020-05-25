@@ -1,0 +1,102 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+trigger:
+- master
+
+resources:
+- repo: self
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+stages:
+- stage: DotNet_Native_Build
+  displayName: Windows Native Build
+  jobs:  
+  - job: DotNetNativeBuild
+    displayName: DotNet Native Build
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+      - task: NuGetToolInstaller@1
+
+      - task: NuGetCommand@2
+        inputs:
+          restoreSolution: '$(solution)'
+
+      - task: VSBuild@1
+        inputs:
+          solution: '$(solution)'
+          msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+          platform: '$(buildPlatform)'
+          configuration: '$(buildConfiguration)'
+
+      - task: VSTest@2
+        inputs:
+          platform: '$(buildPlatform)'
+          configuration: '$(buildConfiguration)'
+
+- stage: Docker_Build
+  displayName: Docker Build
+  jobs:  
+  - job: DockerBuild
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+    # Docker Build and Publish
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'ACR-Study4Dev-JE'
+        repository: 'crud-aspnetcore-api'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: |
+          $(Build.BuildId)
+          latest
+
+    # publish manifests
+    - publish: manifests
+      artifact: manifests
+
+- stage: AKS_Deploy
+  displayName: AKS Deploy
+  dependsOn: Docker_Build
+  jobs:  
+  - deployment: AKSDeploy
+    displayName: AKS Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment: 'Test'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+
+          # AKS Deploy
+          - task: KubernetesManifest@0
+            displayName: Create imagePullSecret
+            inputs:
+              action: createSecret
+              kubernetesServiceConnection: 'AKS-Study4Dev-JE'
+              secretName: 'acr-study4dev-secret'
+              dockerRegistryEndpoint: 'ACR-Study4Dev-JE'
+              
+          - task: KubernetesManifest@0
+            displayName: Deploy to Kubernetes cluster
+            inputs:
+              action: deploy
+              kubernetesServiceConnection: 'AKS-Study4Dev-JE'
+              rolloutStatusTimeout: '60'
+              manifests: |
+                $(Pipeline.Workspace)/manifests/deployment.yaml
+                $(Pipeline.Workspace)/manifests/service.yaml
+              imagePullSecrets: |
+                'acr-study4dev-secret'
+              containers: |
+                study4dev.azurecr.io/crud-aspnetcore-api:$(Build.BuildId)

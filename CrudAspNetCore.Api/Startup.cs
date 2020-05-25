@@ -31,16 +31,10 @@ namespace CrudAspNetCore.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.Configure<CookiePolicyOptions>(options =>
-            //{
-            //    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-            //    options.CheckConsentNeeded = context => true;
-            //});
-
             services.AddDbContextPool<SkyHRContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddControllersWithViews();
+            services.AddControllers();
 
             services.AddCors(options =>
             {
@@ -65,38 +59,22 @@ namespace CrudAspNetCore.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-
-            // app.UseHttpsRedirection();
-            //app.UseMvc();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                //app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                //app.UseHsts();
-            }
 
-            //app.UseHttpsRedirection();
-            //app.UseStaticFiles();
-
-            //app.UseCookiePolicy();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            //app.UseAuthorization();
+            app.UseAuthorization();
 
             app.UseCors(MyAllowSpecificOrigins);
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
 
             //Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -108,6 +86,8 @@ namespace CrudAspNetCore.Api
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
+
+
         }
     }
 }
