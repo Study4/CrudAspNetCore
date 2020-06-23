@@ -9,36 +9,28 @@
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "api/values",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
     "CrudAspNetCore.Api": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "launchUrl": "api/test",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     },
-    "Mac": {
-      "commandName": "Project",
+    "IIS Express": {
+      "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "launchUrl": "api/test",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DevelopmentMac"
-      },
-      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+        "ASPNETCORE_ENVIRONMENT": "DevelopmentForLocalDB"
+      }
     },
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/test",
+      "environmentVariables": {},
       "publishAllPorts": true,
       "useSSL": true
     }

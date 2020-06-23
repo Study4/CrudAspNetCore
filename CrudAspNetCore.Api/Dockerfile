@@ -8,17 +8,17 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-#COPY ["CrudAspNetCore.Api/CrudAspNetCore.Api.csproj", "CrudAspNetCore.Api/"]
+COPY [".", "CrudAspNetCore.Api/"]
 #RUN dotnet restore "CrudAspNetCore.Api/CrudAspNetCore.Api.csproj"
-COPY . .
+#COPY . .
 WORKDIR "/src/CrudAspNetCore.Api"
 RUN dotnet build "CrudAspNetCore.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "CrudAspNetCore.Api.csproj" -c Release -o /app/publish
+RUN dotnet publish "CrudAspNetCore.Api.csproj" -c Release -o /app
 
 FROM base AS final
-#ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_ENVIRONMENT=Production
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "CrudAspNetCore.Api.dll"]

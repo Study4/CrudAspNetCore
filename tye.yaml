@@ -1,0 +1,52 @@
+# tye application configuration file
+# read all about it at https://github.com/dotnet/tye
+#
+# when you've given us a try, we'd love to know what you think:
+#    https://aka.ms/AA7q20u
+#
+name: crudaspnetcore
+services:
+- name: crudaspnetcore-api
+  project: CrudAspNetCore.Api/CrudAspNetCore.Api.csproj
+  bindings:
+    - name: http
+      protocol: http
+      port: 5000
+    - name: https
+      protocol: https
+      port: 5001
+# 假如想使用自己的專案，可以修改底下資訊
+# - name: crudaspnetcore-web
+#   project: ../CrudBlazorWasm/CrudBlazorWasm.csproj
+#   bindings:
+#     - name: http
+#       protocol: http
+#       port: 4000
+#     - name: https
+#       protocol: https
+#       port: 4001
+# 假如有 Container 可以介接，可以修改底下資訊
+# - name: front-end
+#   image: skychang/crud-blazor-front-serverside:3.0.0-preview5
+#   env:
+#     - name: ASPNETCORE_ENVIRONMENT
+#       value: Production
+#   bindings:
+#     - name: http
+#       protocol: http
+#       containerPort: 80
+#       port: 4000
+#     - name: https
+#       protocol: https
+#       containerPort: 443
+#       port: 4001
+- name: sky-hr-db
+  image: mcr.microsoft.com/mssql/server:2017-latest
+  env:
+    - name: SA_PASSWORD
+      value: "P@ssw0rd"
+    - name: ACCEPT_EULA
+      value: "Y"
+  bindings:
+  - port: 1433
+    connectionString: "Server=${host},${port};Database=SkyHRDB;User Id=sa;Password=P@ssw0rd;MultipleActiveResultSets=true"

@@ -14,12 +14,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Microsoft.Net.Http.Headers;
 
 namespace CrudAspNetCore.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration )
         {
             Configuration = configuration;
         }
@@ -29,21 +30,27 @@ namespace CrudAspNetCore.Api
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services, IWebHostEnvironment env)
         {
             services.AddDbContextPool<SkyHRContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddControllers();
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            // 包裝成 Image，並使用 Tye 進行取得此 Image 的時候
+            // 請改用以下方法取得連線字串，因為無法得知 Tye 建立起的 DB Name
+            // options.UseSqlServer(Configuration.GetConnectionString("sky-hr-db")));
 
             services.AddCors(options =>
             {
                 options.AddPolicy(MyAllowSpecificOrigins,
                 builder =>
                 {
-                    builder.WithOrigins("*");
+                    builder.WithOrigins("*")
+                    .AllowAnyMethod()
+                    .WithHeaders(HeaderNames.ContentType, HeaderNames.Authorization);
+                    //.AllowCredentials();
                 });
             });
+
+            services.AddControllers();
 
             services.AddRazorPages();
 
@@ -56,21 +63,22 @@ namespace CrudAspNetCore.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
-
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.EnvironmentName == "DevelopmentForLocalDB")
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            // 不使用 SSL 導向，因為這個專案常常會放到 K8S 裡面
+            // 有需要的可以自行開啟
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseAuthorization();
-
             app.UseCors(MyAllowSpecificOrigins);
+            
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
