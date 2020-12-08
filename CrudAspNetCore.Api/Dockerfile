@@ -1,7 +1,7 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 #docker build -f CrudAspNetCore.Api\Dockerfile .
 
-FROM mcr.microsoft.com/dotnet/runtimesdk:5.0 AS base
+FROM mcr.microsoft.com/dotnet/runtime:5.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
