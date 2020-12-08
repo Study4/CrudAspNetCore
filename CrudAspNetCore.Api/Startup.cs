@@ -30,7 +30,7 @@ namespace CrudAspNetCore.Api
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services, IWebHostEnvironment env)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContextPool<SkyHRContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -52,7 +52,7 @@ namespace CrudAspNetCore.Api
 
             services.AddControllers();
 
-            services.AddRazorPages();
+            //services.AddRazorPages();
 
             services.AddSwaggerGen(c =>
             {
@@ -68,6 +68,16 @@ namespace CrudAspNetCore.Api
             if (env.IsDevelopment() || env.EnvironmentName == "DevelopmentForLocalDB")
             {
                 app.UseDeveloperExceptionPage();
+                
+                //Enable middleware to serve generated Swagger as a JSON endpoint.
+                app.UseSwagger();
+
+                // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+                // specifying the Swagger JSON endpoint.
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                });
             }
 
             // 不使用 SSL 導向，因為這個專案常常會放到 K8S 裡面
@@ -85,15 +95,7 @@ namespace CrudAspNetCore.Api
                 endpoints.MapControllers();
             });
 
-            //Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
-            // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
+ 
 
 
         }
