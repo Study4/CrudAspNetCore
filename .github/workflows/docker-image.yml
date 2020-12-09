@@ -51,7 +51,7 @@ jobs:
           push: true
           tags:  |
             ${{ steps.docker_meta.outputs.tags }}
-            ghcr.io/study4/crud-aspnet-core:${{ steps.buildnumber.outputs.build_number }}
+            ghcr.io/study4/crud-aspnet-core:${{ github.run_id }}
           labels: |
             ${{ steps.docker_meta.outputs.labels }}
             org.opencontainers.image.title=CRUD-ASPNET-Core
