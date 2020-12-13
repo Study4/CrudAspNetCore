@@ -95,7 +95,7 @@ dotnet run --launch-profile DevelopmentForLocalDB
 ```
 
 go to https://localhost:5001/api/test ( Show Hello World )
-or
+
 go to https://localhost:5001/api/employees ( need LocalDB )
 
 ### Container
@@ -112,5 +112,5 @@ dotnet run
 ```
 
 go to https://localhost:5001/api/test ( Show Hello World )
-or
+
 go to https://localhost:5001/api/employees ( Need SQL Server for Linux )
