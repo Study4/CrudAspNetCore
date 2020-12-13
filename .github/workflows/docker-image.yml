@@ -13,6 +13,21 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v2
+      - 
+        # 產生 Docker Metadata 和部分 Tag
+        name: Docker meta
+        id: docker_meta
+        uses: crazy-max/ghaction-docker-meta@v1
+        with:
+          images: ghcr.io/study4/crud-aspnet-core # list of Docker images to use as base name for tags
+          tag-sha: true # add git short SHA as Docker tag
+      - 
+        # 使用 GitHub 的 Build Number
+        name: Generate build number
+        id: buildnumber
+        uses: einaregilsson/build-number@v3 
+        with:
+          token: ${{secrets.github_token}}    
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -34,4 +49,11 @@ jobs:
           file: ./CrudAspNetCore.Api/Dockerfile
           #platforms: linux/amd64,linux/arm64,linux/386
           push: true
-          tags: ghcr.io/study4/crud-aspnet-core:latest
+          tags:  |
+            ${{ steps.docker_meta.outputs.tags }}
+            ghcr.io/study4/crud-aspnet-core:${{ github.run_number }}
+          labels: |
+            ${{ steps.docker_meta.outputs.labels }}
+            org.opencontainers.image.title=CRUD-ASPNET-Core
+            org.opencontainers.image.description=CRUD ASPNET Core
+            org.opencontainers.image.vendor=Study4
