@@ -1,13 +1,15 @@
 # CrudAspNetCore
 
-CRUD - ASP.NET Core - .NET 5
+CRUD - ASP.NET Core
 
-## 目標
+Ver : .NET 5
+
+## Feature
 
 Update : 2020-12-13
 
 - ASP.NET Core Web API CRUD Sample
-  - 包含 Docker Support ( Dockerfile )
+  - Docker Support ( Dockerfile )
   - Enable 單一檔案功能
   - Support Swagger 
       - Swagger UI [https://localhost:5001/swagger/index.html](https://localhost:5001/swagger/index.html)
@@ -98,7 +100,7 @@ go to https://localhost:5001/api/test ( Show Hello World )
 
 go to https://localhost:5001/api/employees ( need LocalDB )
 
-### Container
+### Mac / Linux ( Container mode )
 
 - Need install docker
 - Use SQL Server for Linux Container
@@ -109,6 +111,22 @@ Environment : Development
 docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=<YourStrong@Passw0rd>" -p 1433:1433 --name sql1 -d mcr.microsoft.com/mssql/server:2019-latest
 dotnet build
 dotnet run
+```
+
+go to https://localhost:5001/api/test ( Show Hello World )
+
+go to https://localhost:5001/api/employees ( Need SQL Server for Linux )
+
+### Container only
+
+目前不支援直接使用 Container 來連線資料庫 ( 但可以返回 test )，若要使用 Container 請搭配使用 Docker Compose or Tye。
+
+原因是因為目前沒有設計將 DB 連線的字串，透過 Docker 參數帶入，如真的想單獨使用 Container，請將環境變數設定為 Production，並且將 DB 的名稱給為 hr-mssql，以達到內建的匹配匹配。
+
+[crud-aspnet-core 位置](https://github.com/orgs/Study4/packages/container/package/crud-aspnet-core)
+
+```bash
+docker run -it -p:80:80 -d -e "ASPNETCORE_ENVIRONMENT=Production" ghcr.io/study4/crud-aspnet-core:master
 ```
 
 go to https://localhost:5001/api/test ( Show Hello World )
