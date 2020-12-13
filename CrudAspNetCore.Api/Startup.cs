@@ -20,23 +20,33 @@ namespace CrudAspNetCore.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration )
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
+
+        private readonly IWebHostEnvironment _env;
 
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddDbContextPool<SkyHRContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            // 包裝成 Image，並使用 Tye 進行取得此 Image 的時候
-            // 請改用以下方法取得連線字串，因為無法得知 Tye 建立起的 DB Name
-            // options.UseSqlServer(Configuration.GetConnectionString("sky-hr-db")));
+        {   
+            if(_env.EnvironmentName == "Tye")
+            {
+                // 環境變數使用 Tye 時，搭配 Tye 的設定
+                services.AddDbContextPool<SkyHRContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("sky-hr-db")));
+            }else
+            {
+                // 一般設定
+                services.AddDbContextPool<SkyHRContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            }
+
 
             services.AddCors(options =>
             {
@@ -65,8 +75,10 @@ namespace CrudAspNetCore.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
-            if (env.IsDevelopment() || env.EnvironmentName == "DevelopmentForLocalDB")
+            if (!env.IsProduction())
             {
+                // 非正式環境時
+                // env.IsDevelopment()、env.EnvironmentName == "DevelopmentForLocalDB" 等環境。
                 app.UseDeveloperExceptionPage();
                 
                 //Enable middleware to serve generated Swagger as a JSON endpoint.

@@ -8,6 +8,9 @@ name: crudaspnetcore
 services:
 - name: crudaspnetcore-api
   project: CrudAspNetCore.Api/CrudAspNetCore.Api.csproj
+  env:
+  - name: ASPNETCORE_ENVIRONMENT
+    value: Tye
   bindings:
     - name: http
       protocol: http
@@ -16,15 +19,15 @@ services:
       protocol: https
       port: 5001
 # 假如想使用自己的專案，可以修改底下資訊
-# - name: crudaspnetcore-web
-#   project: ../CrudBlazorWasm/CrudBlazorWasm.csproj
-#   bindings:
-#     - name: http
-#       protocol: http
-#       port: 4000
-#     - name: https
-#       protocol: https
-#       port: 4001
+- name: crudaspnetcore-web
+  project: ../CrudBlazorWasm/CrudBlazorWasm.Web/CrudBlazorWasm.Web.csproj
+  bindings:
+    - name: http
+      protocol: http
+      port: 4000
+    - name: https
+      protocol: https
+      port: 4001
 # 假如有 Container 可以介接，可以修改底下資訊
 # - name: front-end
 #   image: skychang/crud-blazor-front-serverside:3.0.0-preview5
@@ -41,7 +44,7 @@ services:
 #       containerPort: 443
 #       port: 4001
 - name: sky-hr-db
-  image: mcr.microsoft.com/mssql/server:2017-latest
+  image: mcr.microsoft.com/mssql/server:2019-latest
   env:
     - name: SA_PASSWORD
       value: "P@ssw0rd"
